@@ -44,17 +44,54 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final todayDate =
         HumanFormats.dateToString(date: DateTime.now(), dateFormat: "EEEE d");
 
-    return Column(
-      children: [
-        const CustomAppbar(),
-        MoviesSlideshow(movies: nowPlayingMovies),
-        const SizedBox(height: 10),
-        MovieHorizontalListview(
-          movies: slideShowMovies,
-          title: "Now Playing",
-          subtitle: todayDate,
-          loadNextPage: () =>
-              ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
+    return CustomScrollView(
+      slivers: [
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            titlePadding: EdgeInsets.zero,
+            title: CustomAppbar(),
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            return Column(
+              children: [
+                MoviesSlideshow(movies: nowPlayingMovies),
+                const SizedBox(height: 10),
+                MovieHorizontalListview(
+                  movies: slideShowMovies,
+                  title: "Now Playing",
+                  subtitle: todayDate,
+                  loadNextPage: () =>
+                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
+                ),
+                const SizedBox(height: 10),
+                MovieHorizontalListview(
+                  movies: slideShowMovies,
+                  title: "Soon",
+                  subtitle: "This month",
+                  loadNextPage: () =>
+                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
+                ),
+                const SizedBox(height: 10),
+                MovieHorizontalListview(
+                  movies: slideShowMovies,
+                  title: "Popular",
+                  loadNextPage: () =>
+                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
+                ),
+                const SizedBox(height: 10),
+                MovieHorizontalListview(
+                  movies: slideShowMovies,
+                  title: "Best rated",
+                  loadNextPage: () =>
+                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
+                ),
+                const SizedBox(height: 10),
+              ],
+            );
+          }, childCount: 1),
         ),
       ],
     );

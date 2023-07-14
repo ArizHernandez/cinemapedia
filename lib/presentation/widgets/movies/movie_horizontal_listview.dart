@@ -22,7 +22,6 @@ class MovieHorizontalListview extends StatefulWidget {
 }
 
 class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
-  @override
   final scrollController = ScrollController();
 
   @override
@@ -44,6 +43,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 380,
