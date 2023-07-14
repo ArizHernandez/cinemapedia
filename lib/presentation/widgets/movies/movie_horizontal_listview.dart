@@ -51,6 +51,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
         children: [
           if (widget.title != null || widget.subtitle != null)
             _Title(title: widget.title, subtitle: widget.subtitle),
+          const SizedBox(height: 5),
           Expanded(
             child: ListView.builder(
               controller: scrollController,
@@ -60,7 +61,7 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
               itemBuilder: (context, index) =>
                   MovieSlide(movie: widget.movies[index]),
             ),
-          )
+          ),
         ],
       ),
     );

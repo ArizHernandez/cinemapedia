@@ -34,66 +34,81 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     super.initState();
 
     ref.read(nowPlayinMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
+    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
+    final initialLoading = ref.watch(initialLoadingProvider);
+
     final nowPlayingMovies = ref.watch(moviesSlideshowProvider);
+    final popularMovies = ref.watch(popularMoviesProvider);
+    final topRatedMovies = ref.watch(topRatedMoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
     final slideShowMovies = ref.watch(nowPlayinMoviesProvider);
 
     final todayDate =
         HumanFormats.dateToString(date: DateTime.now(), dateFormat: "EEEE d");
 
-    return CustomScrollView(
-      slivers: [
-        const SliverAppBar(
-          floating: true,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: EdgeInsets.zero,
-            title: CustomAppbar(),
+    return Visibility(
+      visible: !initialLoading,
+      replacement: const FullScreenLoader(),
+      child: CustomScrollView(
+        slivers: [
+          const SliverAppBar(
+            floating: true,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: EdgeInsets.zero,
+              title: CustomAppbar(),
+            ),
           ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            return Column(
-              children: [
-                MoviesSlideshow(movies: nowPlayingMovies),
-                const SizedBox(height: 10),
-                MovieHorizontalListview(
-                  movies: slideShowMovies,
-                  title: "Now Playing",
-                  subtitle: todayDate,
-                  loadNextPage: () =>
-                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
-                ),
-                const SizedBox(height: 10),
-                MovieHorizontalListview(
-                  movies: slideShowMovies,
-                  title: "Soon",
-                  subtitle: "This month",
-                  loadNextPage: () =>
-                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
-                ),
-                const SizedBox(height: 10),
-                MovieHorizontalListview(
-                  movies: slideShowMovies,
-                  title: "Popular",
-                  loadNextPage: () =>
-                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
-                ),
-                const SizedBox(height: 10),
-                MovieHorizontalListview(
-                  movies: slideShowMovies,
-                  title: "Best rated",
-                  loadNextPage: () =>
-                      ref.read(nowPlayinMoviesProvider.notifier).loadNextPage(),
-                ),
-                const SizedBox(height: 10),
-              ],
-            );
-          }, childCount: 1),
-        ),
-      ],
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return Column(
+                children: [
+                  MoviesSlideshow(movies: nowPlayingMovies),
+                  const SizedBox(height: 10),
+                  MovieHorizontalListview(
+                    movies: slideShowMovies,
+                    title: "Now Playing",
+                    subtitle: todayDate,
+                    loadNextPage: () => ref
+                        .read(nowPlayinMoviesProvider.notifier)
+                        .loadNextPage(),
+                  ),
+                  const SizedBox(height: 10),
+                  MovieHorizontalListview(
+                    movies: upcomingMovies,
+                    title: "Upcoming",
+                    subtitle: "This month",
+                    loadNextPage: () => ref
+                        .read(upcomingMoviesProvider.notifier)
+                        .loadNextPage(),
+                  ),
+                  const SizedBox(height: 10),
+                  MovieHorizontalListview(
+                    movies: popularMovies,
+                    title: "Popular",
+                    loadNextPage: () =>
+                        ref.read(popularMoviesProvider.notifier).loadNextPage(),
+                  ),
+                  const SizedBox(height: 10),
+                  MovieHorizontalListview(
+                    movies: topRatedMovies,
+                    title: "Top rated",
+                    loadNextPage: () => ref
+                        .read(topRatedMoviesProvider.notifier)
+                        .loadNextPage(),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              );
+            }, childCount: 1),
+          ),
+        ],
+      ),
     );
   }
 }
