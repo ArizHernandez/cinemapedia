@@ -16,15 +16,20 @@ final nowPlayinMoviesProvider =
 class MoviesNotifier extends StateNotifier<List<Movie>> {
   int currenPage = 0;
   MovieCallback fetchMoreMovies;
+  bool isLoading = false;
 
   MoviesNotifier({
     required this.fetchMoreMovies,
   }) : super([]);
 
   Future<void> loadNextPage() async {
+    if (isLoading) return;
+
+    isLoading = true;
     currenPage++;
 
     final List<Movie> movies = await fetchMoreMovies(page: currenPage);
     state = [...state, ...movies];
+    isLoading = false;
   }
 }
