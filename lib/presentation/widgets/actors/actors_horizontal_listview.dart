@@ -22,7 +22,7 @@ class ActorsHorizontalListview extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 20),
+          padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
           child: Text("Cast", style: textStyles.titleLarge),
         ),
         SizedBox(
