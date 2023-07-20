@@ -3,6 +3,7 @@ import 'package:animate_do/animate_do.dart';
 
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
+import 'package:go_router/go_router.dart';
 
 class MovieSlide extends StatelessWidget {
   final Movie movie;
@@ -32,7 +33,13 @@ class MovieSlide extends StatelessWidget {
                 width: 160,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return FadeIn(child: child);
+                  if (loadingProgress == null) {
+                    return FadeIn(
+                      child: GestureDetector(
+                          onTap: () => context.push('/movie/${movie.id}'),
+                          child: child),
+                    );
+                  }
 
                   return const Padding(
                     padding: EdgeInsets.all(8.0),
