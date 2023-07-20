@@ -16,6 +16,7 @@ class ActorsHorizontalListview extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final textStyles = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,14 +49,24 @@ class ActorsHorizontalListview extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text(actor.name, style: textStyles.titleMedium),
-                      if (actor.character != null)
-                        Text(
-                          actor.character!,
-                          style: textStyles.bodyMedium?.copyWith(
-                            color: colors.secondary,
-                          ),
+                      SizedBox(
+                        width: (size.width - 40) * 0.45,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(actor.name,
+                                style: textStyles.bodyMedium
+                                    ?.copyWith(color: colors.primary)),
+                            Text(
+                              actor.character ?? "",
+                              style: textStyles.titleMedium?.copyWith(
+                                  color: colors.secondary,
+                                  overflow: TextOverflow.ellipsis,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
+                      ),
                     ],
                   ),
                 ),
