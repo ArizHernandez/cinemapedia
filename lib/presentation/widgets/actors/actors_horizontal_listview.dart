@@ -34,12 +34,12 @@ class ActorsHorizontalListview extends StatelessWidget {
             itemBuilder: (context, index) {
               final actor = actors[index];
 
-              return FadeInRight(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    children: [
-                      ClipRRect(
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    FadeInRight(
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.network(
                           actor.profilePath,
@@ -48,27 +48,27 @@ class ActorsHorizontalListview extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: (size.width - 40) * 0.45,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(actor.name,
-                                style: textStyles.bodyMedium
-                                    ?.copyWith(color: colors.primary)),
-                            Text(
-                              actor.character ?? "",
-                              style: textStyles.titleMedium?.copyWith(
-                                  color: colors.secondary,
-                                  overflow: TextOverflow.ellipsis,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: (size.width - 40) * 0.45,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(actor.name,
+                              style: textStyles.bodyMedium
+                                  ?.copyWith(color: colors.primary)),
+                          Text(
+                            actor.character ?? "",
+                            style: textStyles.titleMedium?.copyWith(
+                                color: colors.secondary,
+                                overflow: TextOverflow.ellipsis,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             },

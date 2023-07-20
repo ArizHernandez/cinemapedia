@@ -109,7 +109,7 @@ class _MovieRecommendationsState extends ConsumerState<_MovieRecommendations> {
   @override
   void initState() {
     super.initState();
- 
+
     ref.read(movieRecommendationsProvider.notifier).loadAll(widget.movieId);
   }
 
@@ -173,31 +173,49 @@ class _MovieDetails extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              ...movie.genreIds.map(
-                (genre) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Chip(
-                    label: Text(genre),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        _MovieGenreChipList(movie: movie),
         const SizedBox(height: 10),
         _MovieRecommendations(movieId: movie.id.toString()),
         const SizedBox(height: 10),
         _ActorsByMovie(movieId: movie.id.toString()),
         const SizedBox(height: 10),
       ],
+    );
+  }
+}
+
+class _MovieGenreChipList extends StatelessWidget {
+  final Movie movie;
+
+  const _MovieGenreChipList({
+    required this.movie,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: SizedBox(
+        width: double.infinity,
+        height: 40,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            ...movie.genreIds.map(
+              (genre) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                child: Chip(
+                  label: Text(genre),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -218,7 +236,19 @@ class _CustomSliverAppbar extends StatelessWidget {
         background: Stack(
           children: [
             SizedBox.expand(
-              child: Image.network(movie.posterPath, fit: BoxFit.cover),
+              child: Image.network(
+                movie.posterPath,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return FadeIn(child: child);
+
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  );
+                },
+              ),
             ),
             const SizedBox.expand(
               child: DecoratedBox(
