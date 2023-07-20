@@ -95,7 +95,7 @@ class _ActorsByMovie extends ConsumerWidget {
   }
 }
 
-class _MovieRecommendations extends ConsumerWidget {
+class _MovieRecommendations extends ConsumerStatefulWidget {
   final String movieId;
 
   const _MovieRecommendations({
@@ -103,10 +103,20 @@ class _MovieRecommendations extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final List<Movie> movies = ref.watch(movieRecommendationsProvider);
+  _MovieRecommendationsState createState() => _MovieRecommendationsState();
+}
 
-    ref.read(movieRecommendationsProvider.notifier).loadAll(movieId);
+class _MovieRecommendationsState extends ConsumerState<_MovieRecommendations> {
+  @override
+  void initState() {
+    super.initState();
+ 
+    ref.read(movieRecommendationsProvider.notifier).loadAll(widget.movieId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Movie> movies = ref.watch(movieRecommendationsProvider);
 
     if (movies.isEmpty) {
       return const SizedBox(
@@ -122,8 +132,9 @@ class _MovieRecommendations extends ConsumerWidget {
     return MovieHorizontalListview(
       movies: movies,
       title: "Similar Movies",
-      loadNextPage: () =>
-          ref.read(movieRecommendationsProvider.notifier).loadNextPage(movieId),
+      loadNextPage: () => ref
+          .read(movieRecommendationsProvider.notifier)
+          .loadNextPage(widget.movieId),
     );
   }
 }
