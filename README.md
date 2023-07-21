@@ -1,7 +1,7 @@
 # cinemapedia
 
-A new Flutter project.
-
+This proyect is part of Fernando Herrera's course
+[course link](https://www.udemy.com/course/flutter-cero-a-experto/)
 ## Getting Started
 
 This project is a starting point for a Flutter application.
@@ -21,6 +21,8 @@ A few resources to get you started if this is your first Flutter project:
 
 ![MovieDetail Image2](https://github.com/ArizHernandez/cinemapedia/assets/37966712/007b0c7a-d06d-4d58-b159-a9f853390cc8)
 
+### Search
+![Search movie](https://github.com/ArizHernandez/cinemapedia/assets/37966712/92b38bda-d8fd-4b84-9089-591df10423dc)
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
