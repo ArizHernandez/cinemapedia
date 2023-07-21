@@ -1,8 +1,12 @@
 import 'package:intl/intl.dart';
 
 class HumanFormats {
-  static String numberCompact(double number) {
-    return NumberFormat.compact(locale: "en").format(number);
+  static String numberCompact(double number, [int? decimalDigits]) {
+    return NumberFormat.compactCurrency(
+      decimalDigits: decimalDigits,
+      locale: "en",
+      symbol: "",
+    ).format(number);
   }
 
   static String dateToString({required DateTime date, String? dateFormat}) {
