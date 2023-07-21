@@ -15,6 +15,8 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
   StreamController<bool> isLoadingStream = StreamController.broadcast();
 
+  bool areStreamsClosed = false;
+
   Timer? _debounceTimer;
 
   SearchMovieDelegate({
@@ -28,19 +30,26 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
     if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
 
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
-      isLoadingStream.add(true);
+      if (!areStreamsClosed) {
+        isLoadingStream.add(true);
+      }
 
       final movies = await searchMovies(query);
-      isLoadingStream.add(false);
+      if (!areStreamsClosed) {
+        isLoadingStream.add(false);
+      }
 
       initialMovies = movies;
-      debouncedMovies.add(movies);
+      if (!areStreamsClosed) {
+        debouncedMovies.add(movies);
+      }
     });
   }
 
   void clearStreams() {
     debouncedMovies.close();
     isLoadingStream.close();
+    areStreamsClosed = true;
   }
 
   @override
