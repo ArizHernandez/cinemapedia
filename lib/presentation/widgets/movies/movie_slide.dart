@@ -36,7 +36,7 @@ class MovieSlide extends StatelessWidget {
                   if (loadingProgress == null) {
                     return FadeIn(
                       child: GestureDetector(
-                          onTap: () => context.push('/movie/${movie.id}'),
+                          onTap: () => context.push('/home/0/movie/${movie.id}'),
                           child: child),
                     );
                   }
