@@ -3,6 +3,10 @@ import 'package:cinemapedia/presentation/providers/movies/movies_repository_prov
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef MovieCallback = Future<List<Movie>> Function({int page});
+typedef MovieRecommendationCallback = Future<List<Movie>> Function(
+    {String movieId, int page});
+typedef MovieNotifierState = Map<String, List<Movie>>;
+
 typedef MovieRecommendationsCallback = Future<List<Movie>> Function(
     {int page, String movieId});
 
@@ -37,11 +41,12 @@ final topRatedMoviesProvider =
 });
 
 final movieRecommendationsProvider =
-    StateNotifierProvider<MovieRecommendationsNotifier, List<Movie>>((ref) {
+    StateNotifierProvider<MovieRecommendationsNotifier, MovieNotifierState>(
+        (ref) {
   final fetchMoreMovies =
       ref.watch(moviesRepositoryProvider).getRecommendations;
 
-  return MovieRecommendationsNotifier(fetchRecommendations: fetchMoreMovies);
+  return MovieRecommendationsNotifier(getRecommendations: fetchMoreMovies);
 });
 
 class MoviesNotifier extends StateNotifier<List<Movie>> {
@@ -65,42 +70,21 @@ class MoviesNotifier extends StateNotifier<List<Movie>> {
   }
 }
 
-class MovieRecommendationsNotifier extends StateNotifier<List<Movie>> {
-  int currenPage = 0;
-  MovieRecommendationsCallback fetchRecommendations;
-  bool isLoading = false;
+class MovieRecommendationsNotifier extends StateNotifier<MovieNotifierState> {
+  final MovieRecommendationCallback getRecommendations;
 
   MovieRecommendationsNotifier({
-    required this.fetchRecommendations,
-  }) : super([]);
+    required this.getRecommendations,
+  }) : super({});
 
-  Future<void> loadAll(String movieId) async {
-    if (isLoading) return;
+  Future<void> loadMovie(String movieId) async {
+    if (state[movieId] != null) return;
 
-    isLoading = true;
-    currenPage = 1;
+    final movie = await getRecommendations(movieId: movieId);
 
-    final List<Movie> movies = await fetchRecommendations(
-      movieId: movieId,
-      page: currenPage,
-    );
-
-    state = movies;
-    isLoading = false;
-  }
-
-  Future<void> loadNextPage(String movieId) async {
-    if (isLoading) return;
-
-    isLoading = true;
-    currenPage++;
-
-    final List<Movie> movies = await fetchRecommendations(
-      movieId: movieId,
-      page: currenPage,
-    );
-
-    state = [...state, ...movies];
-    isLoading = false;
+    state = {
+      ...state,
+      movieId: movie,
+    };
   }
 }

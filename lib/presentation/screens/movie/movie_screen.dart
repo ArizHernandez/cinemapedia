@@ -110,14 +110,14 @@ class _MovieRecommendationsState extends ConsumerState<_MovieRecommendations> {
   void initState() {
     super.initState();
 
-    ref.read(movieRecommendationsProvider.notifier).loadAll(widget.movieId);
+    ref.read(movieRecommendationsProvider.notifier).loadMovie(widget.movieId);
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Movie> movies = ref.watch(movieRecommendationsProvider);
+    final List<Movie>? movies = ref.watch(movieRecommendationsProvider)[widget.movieId];
 
-    if (movies.isEmpty) {
+    if (movies == null) {
       return const SizedBox(
         height: 380,
         child: Center(
@@ -129,12 +129,9 @@ class _MovieRecommendationsState extends ConsumerState<_MovieRecommendations> {
     }
 
     return MovieHorizontalListview(
-      movies: movies,
-      title: "Similar Movies",
-      loadNextPage: () => ref
-          .read(movieRecommendationsProvider.notifier)
-          .loadNextPage(widget.movieId),
-    );
+        movies: movies,
+        title: "Similar Movies",
+        loadNextPage: () => ref.read(movieRecommendationsProvider.notifier));
   }
 }
 
