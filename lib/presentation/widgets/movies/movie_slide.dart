@@ -72,13 +72,13 @@ class MovieSlide extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               Text(
-                movie.voteAverage.toString(),
+                HumanFormats.numberCompact(movie.voteAverage, 2),
                 style: textStyles.bodyMedium?.copyWith(
                   color: Colors.yellow.shade800,
                 ),
               ),
               const SizedBox(
-                width: 10,
+                width: 60,
               ),
               Text(
                 moviePopularity,
