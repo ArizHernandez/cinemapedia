@@ -3,14 +3,13 @@ import 'package:cinemapedia/presentation/providers/movies/movies_repository_prov
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef GetMovieCallback = Future<Movie> Function({String id});
-typedef MovieNotifierState = Map<String, Movie>;
 
 final movieInfoProvider =
-    StateNotifierProvider<MovieMapNotifier, MovieNotifierState>((ref) =>
+    StateNotifierProvider<MovieMapNotifier, Map<String, Movie>>((ref) =>
         MovieMapNotifier(
             getMovie: ref.watch(moviesRepositoryProvider).getMovieById));
 
-class MovieMapNotifier extends StateNotifier<MovieNotifierState> {
+class MovieMapNotifier extends StateNotifier<Map<String, Movie>> {
   final GetMovieCallback getMovie;
 
   MovieMapNotifier({
