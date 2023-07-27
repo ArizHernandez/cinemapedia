@@ -37,18 +37,14 @@ class MovieSlide extends StatelessWidget {
                   if (loadingProgress == null) {
                     return FadeIn(
                       child: GestureDetector(
-                          onTap: () =>
-                              context.push('/home/0/movie/${movie.id}'),
-                          child: child),
+                        onTap: () => context.push('/home/0/movie/${movie.id}'),
+                        child: child,
+                      ),
                     );
                   }
 
-                  return Image.asset(
-                    'assets/loaders/bottle-loader.gif',
-                    width: 160,
-                    height: 240,
-                    fit: BoxFit.cover
-                  );
+                  return Image.asset('assets/loaders/bottle-loader.gif',
+                      width: 160, height: 240, fit: BoxFit.cover);
                 },
               ),
             ),

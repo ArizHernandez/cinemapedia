@@ -1,6 +1,7 @@
-import 'package:cinemapedia/domain/entities/movie.dart';
-import 'package:cinemapedia/presentation/providers/movies/movies_repository_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:cinemapedia/domain/entities/entities.dart';
+import 'package:cinemapedia/presentation/providers/movies/movies_repository_provider.dart';
 
 typedef MovieCallback = Future<List<Movie>> Function({int page});
 typedef MovieRecommendationCallback = Future<List<Movie>> Function(
@@ -47,6 +48,13 @@ final movieRecommendationsProvider =
       ref.watch(moviesRepositoryProvider).getRecommendations;
 
   return MovieRecommendationsNotifier(getRecommendations: fetchMoreMovies);
+});
+
+final FutureProviderFamily<List<Video>, int> videosFromMovieProvider =
+    FutureProvider.family((ref, int movieId) {
+  final movieRepository = ref.watch(moviesRepositoryProvider);
+
+  return movieRepository.getTrailerByMovie(movieId: movieId);
 });
 
 class MoviesNotifier extends StateNotifier<List<Movie>> {

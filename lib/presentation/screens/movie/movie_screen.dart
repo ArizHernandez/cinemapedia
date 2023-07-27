@@ -1,3 +1,4 @@
+import 'package:cinemapedia/presentation/widgets/videos/movie_video_player.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,6 +62,140 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _CustomSliverAppbar extends ConsumerWidget {
+  final Movie movie;
+  const _CustomSliverAppbar({required this.movie});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final size = MediaQuery.of(context).size;
+    final isFavoriteMovie = ref.watch(isFavoriteMovieProvider(movie.id));
+
+    return SliverAppBar(
+      backgroundColor: Colors.black,
+      expandedHeight: size.height * 0.7,
+      foregroundColor: Colors.white,
+      actions: [
+        IconButton(
+          onPressed: () async {
+            await ref
+                .read(favoriteMoviesProvider.notifier)
+                .toggleFavorite(movie);
+
+            ref.invalidate(isFavoriteMovieProvider(movie.id));
+          },
+          icon: isFavoriteMovie.when(
+            loading: () => const CircularProgressIndicator(strokeWidth: 2),
+            data: (isFavorite) => isFavorite
+                ? const Icon(Icons.favorite_rounded, color: Colors.red)
+                : const Icon(Icons.favorite_border_rounded),
+            error: (_, __) => throw UnimplementedError(),
+          ),
+        ),
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        titlePadding: EdgeInsets.zero,
+        title: const _CustomGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0.7, 1],
+          colors: [
+            Colors.transparent,
+            Colors.black45,
+          ],
+        ),
+        background: Stack(
+          children: [
+            SizedBox.expand(
+              child: Image.network(
+                movie.posterPath,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return FadeIn(child: child);
+
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                    ),
+                  );
+                },
+              ),
+            ),
+            const _CustomGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.0, 0.3],
+              colors: [
+                Colors.black26,
+                Colors.transparent,
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  final Alignment begin;
+  final Alignment end;
+  final List<double> stops;
+  final List<Color> colors;
+
+  const _CustomGradient({
+    required this.begin,
+    required this.end,
+    required this.stops,
+    required this.colors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: begin,
+            end: end,
+            stops: stops,
+            colors: colors,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MovieDetails extends StatelessWidget {
+  final Movie movie;
+
+  const _MovieDetails({
+    required this.movie,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final textStyles = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _MovieOverview(movie: movie, size: size, textStyles: textStyles),
+        _MovieGenreChipList(movie: movie),
+        const SizedBox(height: 10),
+        _MovieRecommendations(movieId: movie.id.toString()),
+        const SizedBox(height: 10),
+        MovieVideoPlayer(movieId: movie.id),
+        const SizedBox(height: 10),
+        _ActorsByMovie(movieId: movie.id.toString()),
+        const SizedBox(height: 10),
+      ],
     );
   }
 }
@@ -144,33 +279,6 @@ class _MovieRecommendationsState extends ConsumerState<_MovieRecommendations> {
         movies: movies,
         title: "Similar Movies",
         loadNextPage: () => ref.read(movieRecommendationsProvider.notifier));
-  }
-}
-
-class _MovieDetails extends StatelessWidget {
-  final Movie movie;
-
-  const _MovieDetails({
-    required this.movie,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final textStyles = Theme.of(context).textTheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _MovieOverview(movie: movie, size: size, textStyles: textStyles),
-        _MovieGenreChipList(movie: movie),
-        const SizedBox(height: 10),
-        _MovieRecommendations(movieId: movie.id.toString()),
-        const SizedBox(height: 10),
-        _ActorsByMovie(movieId: movie.id.toString()),
-        const SizedBox(height: 10),
-      ],
-    );
   }
 }
 
@@ -273,101 +381,6 @@ class _MovieGenreChipList extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CustomSliverAppbar extends ConsumerWidget {
-  final Movie movie;
-  const _CustomSliverAppbar({required this.movie});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.of(context).size;
-    final isFavoriteMovie = ref.watch(isFavoriteMovieProvider(movie.id));
-
-    return SliverAppBar(
-      backgroundColor: Colors.black,
-      expandedHeight: size.height * 0.7,
-      foregroundColor: Colors.white,
-      actions: [
-        IconButton(
-          onPressed: () async {
-            await ref
-                .read(favoriteMoviesProvider.notifier)
-                .toggleFavorite(movie);
-
-            ref.invalidate(isFavoriteMovieProvider(movie.id));
-          },
-          icon: isFavoriteMovie.when(
-            loading: () => const CircularProgressIndicator(strokeWidth: 2),
-            data: (isFavorite) => isFavorite
-                ? const Icon(Icons.favorite_rounded, color: Colors.red)
-                : const Icon(Icons.favorite_border_rounded),
-            error: (_, __) => throw UnimplementedError(),
-          ),
-        ),
-      ],
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          children: [
-            SizedBox.expand(
-              child: Image.network(
-                movie.posterPath,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return FadeIn(child: child);
-
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                    ),
-                  );
-                },
-              ),
-            ),
-            const _CustomGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.0, 0.3],
-              colors: [
-                Colors.black26,
-                Colors.transparent,
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CustomGradient extends StatelessWidget {
-  final Alignment begin;
-  final Alignment end;
-  final List<double> stops;
-  final List<Color> colors;
-
-  const _CustomGradient({
-    required this.begin,
-    required this.end,
-    required this.stops,
-    required this.colors,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: begin,
-            end: end,
-            stops: stops,
-            colors: colors,
-          ),
         ),
       ),
     );
