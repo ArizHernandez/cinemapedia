@@ -31,6 +31,7 @@ class MovieSlide extends StatelessWidget {
               child: Image.network(
                 movie.posterPath,
                 width: 160,
+                height: 240,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) {
@@ -42,13 +43,11 @@ class MovieSlide extends StatelessWidget {
                     );
                   }
 
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ),
+                  return Image.asset(
+                    'assets/loaders/bottle-loader.gif',
+                    width: 160,
+                    height: 240,
+                    fit: BoxFit.cover
                   );
                 },
               ),

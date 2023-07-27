@@ -15,7 +15,8 @@ class HomeView extends ConsumerStatefulWidget {
   HomeViewState createState() => HomeViewState();
 }
 
-class HomeViewState extends ConsumerState<HomeView> {
+class HomeViewState extends ConsumerState<HomeView>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -28,10 +29,11 @@ class HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final initialLoading = ref.watch(initialLoadingProvider);
 
     final nowPlayingMovies = ref.watch(moviesSlideshowProvider);
-    final popularMovies = ref.watch(popularMoviesProvider);
     final topRatedMovies = ref.watch(topRatedMoviesProvider);
     final upcomingMovies = ref.watch(upcomingMoviesProvider);
     final slideShowMovies = ref.watch(nowPlayinMoviesProvider);
@@ -76,13 +78,6 @@ class HomeViewState extends ConsumerState<HomeView> {
                   ),
                   const SizedBox(height: 10),
                   MovieHorizontalListview(
-                    movies: popularMovies,
-                    title: "Popular",
-                    loadNextPage: () =>
-                        ref.read(popularMoviesProvider.notifier).loadNextPage(),
-                  ),
-                  const SizedBox(height: 10),
-                  MovieHorizontalListview(
                     movies: topRatedMovies,
                     title: "Top rated",
                     loadNextPage: () => ref
@@ -97,4 +92,7 @@ class HomeViewState extends ConsumerState<HomeView> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

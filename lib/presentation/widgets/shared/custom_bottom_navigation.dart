@@ -21,8 +21,8 @@ class CustomBottomNavigation extends StatelessWidget {
           icon: Icon(Icons.home_max),
         ),
         NavigationDestination(
-          label: "Categories",
-          icon: Icon(Icons.label_outline_rounded),
+          label: "Populars",
+          icon: Icon(Icons.thumbs_up_down_outlined),
         ),
         NavigationDestination(
           label: "Favoritos",

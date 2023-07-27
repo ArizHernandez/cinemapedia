@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:cinemapedia/presentation/views/views.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const name = "home_screen";
-
   final int pageIndex;
 
   const HomeScreen({
@@ -13,20 +12,41 @@ class HomeScreen extends StatelessWidget {
     required this.pageIndex,
   });
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _controller = PageController(keepPage: true);
+
   final viewRoutes = const [
     HomeView(),
-    SizedBox(),
+    PopularView(),
     FavoritesView(),
   ];
 
+  void changePage() {
+    if (!_controller.hasClients) return;
+
+    _controller.animateToPage(
+      widget.pageIndex,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    changePage();
+
     return Scaffold(
-      body: IndexedStack(
-        index: pageIndex,
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _controller,
         children: viewRoutes,
       ),
-      bottomNavigationBar: CustomBottomNavigation(currentIndex: pageIndex),
+      bottomNavigationBar:
+          CustomBottomNavigation(currentIndex: widget.pageIndex),
     );
   }
 }

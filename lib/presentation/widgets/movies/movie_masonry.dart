@@ -30,7 +30,7 @@ class _MovieMasonryState extends State<MovieMasonry> {
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 200) {
+          _scrollController.position.maxScrollExtent - 100) {
         widget.loadNextPage!();
       }
     });
@@ -50,7 +50,7 @@ class _MovieMasonryState extends State<MovieMasonry> {
           if (index == 1) {
             return Column(
               children: [
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 MoviePosterLink(movie: widget.movies[index]),
               ],
             );
