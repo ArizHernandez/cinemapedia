@@ -43,8 +43,12 @@ class MovieSlide extends StatelessWidget {
                     );
                   }
 
-                  return Image.asset('assets/loaders/bottle-loader.gif',
-                      width: 160, height: 240, fit: BoxFit.cover);
+                  return Image.asset(
+                    'assets/loaders/bottle-loader.gif',
+                    width: 160,
+                    height: 240,
+                    fit: BoxFit.cover,
+                  );
                 },
               ),
             ),

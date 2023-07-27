@@ -25,7 +25,7 @@ class CustomBottomNavigation extends StatelessWidget {
           icon: Icon(Icons.thumbs_up_down_outlined),
         ),
         NavigationDestination(
-          label: "Favoritos",
+          label: "Favorites",
           icon: Icon(Icons.favorite_outline),
         ),
       ],

@@ -151,18 +151,15 @@ class _MovieItem extends StatelessWidget {
             SizedBox(
               width: size.width * 0.2,
               child: Image.network(
+                height: 140,
                 movie.posterPath,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return FadeIn(child: child);
 
-                  return Center(
-                    heightFactor: 3,
-                    child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null),
+                  return Image.asset(
+                    'assets/loaders/bottle-loader.gif',
+                    width: size.width * 0.2,
+                    fit: BoxFit.cover,
                   );
                 },
               ),
